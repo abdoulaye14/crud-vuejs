@@ -1,6 +1,6 @@
 # crud-vuejs
 
-Cette application est concçue avec le framework Vuejs en Frontend et le framework python flask Backend
+Cette application est conçue avec le framework Vuejs en Frontend et le framework python flask en Backend
 I. Backend
 1ére etape : installer python sur votre machine
 2ème étape : installer un module de gestion de variables d'environnement python
