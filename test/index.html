@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
+<link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
+    <title>CRUD with Vuejs</title>
+</head>
+<body>
+    <div id="vuejscrudapp" class="container">
+        <div class="row">
+            <div class="col-md-12 mt-5">
+                <h1 class="text-center">CRUD with Vuejs</h1>
+                <hr>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+              <!-- Add Records -->
+                <div>
+                    <b-button id="show-btn" @click="showModal('my-modal')">Add Records</b-button>
+        
+                    <b-modal ref="my-modal" hide-footer title="Add Records">
+                    <div>
+                        <form action="" @submit.prevent="onSubmit">
+                        <div class="form-group">
+                            <label for="">First Name</label>
+                            <input type="text" v-model="firstname" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="">Last Name</label>
+                            <input type="text" v-model="lastname" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="">Address</label>
+                            <input type="text" v-model="address" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-sm btn-outline-info">Add Records</button>
+                        </div>
+                        </form>
+                    </div>
+                    <b-button class="mt-3" variant="outline-danger" block @click="hideModal('my-modal')">Close Me</b-button>
+                    </b-modal>
+                </div>
+                <!-- Update Record -->
+                <div>
+                    <b-modal ref="my-modal1" hide-footer title="Update Record">
+                    <div>
+                        <form action="" @submit.prevent="onUpdate">
+                        <div class="form-group">
+                            <label for="">First Name</label>
+                            <input type="text" v-model="edit_id">
+                            <input type="text" v-model="edit_firstname" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="">Last Name</label>
+                            <input type="text" v-model="edit_lastname" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="">Address</label>
+                            <input type="text" v-model="edit_address" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-sm btn-outline-info">Update Record</button>
+                        </div>
+                        </form>
+                    </div>
+                    <b-button  class="mt-3" variant="outline-danger" block @click="hideModal('my-modal1')">Close Me</b-button>
+                    </b-modal>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="row">
+            <div class="col-md-12">
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Address</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(record, i) in records" :key="record.id">
+                        <td>{{i+1}}</td>
+                        <td>{{record.firstname}}</td>
+                        <td>{{record.lastname}}</td>
+                        <td>{{record.address}}</td>
+                        <td>
+                            <button @click="editRecord(record.id)" class="btn btn-sm btn-outline-info">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                                </svg>
+                            </button>
+                            <button @click="deleteRecord(record.id)" class="btn btn-sm btn-outline-danger">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                                    <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                                </svg>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+              </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <!-- BootstrapVue js -->
+    <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    
+    <script>
+        var app = new Vue({
+            el: '#vuejscrudapp',
+            data: {
+                firstname: '',
+                lastname: '',
+                address: '',
+                records: [],
+                edit_id: '',
+                edit_firstname: '',
+                edit_lastname: '',
+                edit_address: ''
+            },
+
+            methods: {
+                showModal(id) {
+                    this.$refs[id].show()
+                },
+                
+                hideModal(id) {
+                    this.$refs[id].hide()
+                },
+
+                onSubmit(){
+                    if (this.firstname !== '' && this.lastname !== '' && this.address !== '') {
+                        var config = { headers: {  
+                            'Content-Type': 'application/json',
+                            'Access-Control-Allow-Origin': '*'}
+                        }
+                        axios.post("http://127.0.0.1:5000/insert", 
+                            { firstname : this.firstname, lastname : this.lastname, address : this.address}, config
+                        )
+                        .then(res => {
+                            console.log(res)
+                            alert('New record Successfully added')
+                            this.firstname = ''
+                            this.lastname = ''
+                            this.address = ''
+            
+                            app.hideModal('my-modal')
+                            app.getRecords()
+                        })
+                        .catch(err => {
+                            console.log(err)
+                        })
+                    }else{
+                    alert('empty')
+                    }
+                },
+
+                editRecord(id){
+                    axios.get("http://127.0.0.1:5000/edit/" + id)
+                    .then(res => {
+                        console.log(res.data)
+                        this.edit_id = res.data.editmember['id']
+                        this.edit_firstname = res.data.editmember['firstname']
+                        this.edit_lastname = res.data.editmember['lastname']
+                        this.edit_address = res.data.editmember['address']
+                        app.showModal('my-modal1')
+                    })
+                    .catch(err => {
+                    console.log(err)
+                    })
+                },
+
+                onUpdate(){
+                    if (this.edit_firstname !== '' && this.edit_lastname !== '' && this.edit_address !== '' && this.edit_id !== '') {
+    
+                        var config = { headers: {  
+                            'Content-Type': 'application/json',
+                            'Access-Control-Allow-Origin': '*'}
+                        }
+                        axios.post("http://127.0.0.1:5000/update", 
+                            { edit_id : this.edit_id, edit_firstname : this.edit_firstname, edit_lastname : this.edit_lastname, edit_address : this.edit_address}, config
+                        )
+                        .then(res => {
+                            console.log(res)
+                            alert('record update');
+            
+                            this.edit_firstname = '';
+                            this.edit_lastname = '';
+                            this.edit_address = '';
+                            this.edit_id = '';
+            
+                            app.hideModal('my-modal1');
+                            app.getRecords();
+                        })
+                        .catch(err => {
+                            console.log(err)
+                        })
+        
+                    }else{
+                    alert('empty')
+                    }
+                },
+
+                getRecords(){
+                    axios({
+                        url: 'http://localhost:5000/',
+                        method: 'get'
+                    })
+                    .then(res => {
+                        console.log(res)
+                        this.records = res.data.members
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+                },
+
+                deleteRecord(id){
+                    if (window.confirm('Delete this record')) {
+                        axios.get("http://127.0.0.1:5000/delete/" + id)
+                        .then(res => {
+                            console.log(res)
+                            alert('delete successfully')
+                            app.getRecords();
+                        })
+                        .catch(err => {
+                            console.log(err)
+                        })
+                    }
+                },
+            },
+
+            mounted: function(){
+                this.getRecords()
+            }
+        })
+    </script>
+</body>
+</html>
